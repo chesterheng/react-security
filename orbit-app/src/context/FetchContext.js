@@ -2,6 +2,7 @@ import React, { createContext } from 'react';
 import axios from 'axios';
 
 const FetchContext = createContext();
+FetchContext.displayName = 'FetchContext';
 const { Provider } = FetchContext;
 
 const FetchProvider = ({ children }) => {
