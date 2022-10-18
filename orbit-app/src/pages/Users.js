@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useState
 } from 'react';
+import DOMPurify from 'dompurify';
 import PageTitle from '../components/common/PageTitle';
 import { FetchContext } from '../context/FetchContext';
 import Card from '../components/common/Card';
@@ -32,7 +33,7 @@ const UserDetail = ({ user }) => (
           <UserDetailLabel text="Bio" />
           {user.bio ? (
             <div
-              dangerouslySetInnerHTML={{ __html: user.bio }}
+              dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(user.bio) }}
             />
           ) : (
             <p className="text-gray-500 italic">
