@@ -1,67 +1,20 @@
-# ReactSecurity - Orbit
+# React Security
 
-<p>
-  <a href="https://twitter.com/ryanchenkie" target="_blank">
-    <img alt="Twitter: ryanchenkie" src="https://img.shields.io/twitter/follow/ryanchenkie.svg?style=social" />
-  </a>
-</p>
+## Summary
 
-👋 Welcome to Orbit! This is a demo app for learning security for React applications. You can find out more at [ReactSecurity.io](https://reactsecurity.io).
-
-## A Look at the App
-
-Here's the dashboard for the app
-![orbit dashboard](./images/orbit-dashboard.png)
-
-For a more in-depth tour, check out this video:
-
-[![orbit tour](./images/orbit-tour.jpg)](https://www.youtube.com/watch?v=cTAizIOENZw)
-
-There are two parts to the app in this project: **orbit-app** and **orbit-api**. These are the front end React application and the backend Node API respectively.
-
-## Install the Dependencies
-
-We need to install dependencies for both **orbit-app** and **orbit-api**. Change directories into each and install with **npm**.
-
-```bash
-cd orbit-app
-npm install
-cd ../orbit-api
-npm install
-```
-
-## Set Up the Environment Files
-
-The React app contains a file called `.env.local`. This file has a single variable called `REACT_APP_API_URL` which is used to connect to the backend. You can leave this as is.
-
-The backend contains a file called `.env.example`. This file needs to be renamed to `.env` and provided with values.
-
-For `ATLAS_URL`, provide the connection string to your MongoDB Atlas cluster. You can use other MongoDB providers, or even use a local MongoDB connection. Learn how to create a MongoDB instance with Atlas [here](https://www.mongodb.com/download-center).
-
-For `JWT_SECRET`, provide a long, strong, unguessable secret, much like you would in production.
-
-## Run the Applications
-
-The React app is built with **create-react-app**. Run it with the script provided in its **package.json** file.
-
-```bash
-cd orbit-app
-npm start
-```
-
-The Node API comes with a script in its `package.json` which allows you to run it in development mode with **nodemon**.
-
-Open a new terminal window, change directories into the API, and start it up.
-
-```bash
-cd orbit-api
-npm run dev
-```
-
-The Node API will be running at `http://localhost:3001`.
-
-Navigate to `http://localhost:3000` to see the app running!
-
-## License
-
-MIT
+- Authentication
+  - [Login](https://github.com/chesterheng/react-security/blob/main/orbit-app/src/pages/Login.js#L32)/[logout](https://github.com/chesterheng/react-security/blob/main/orbit-app/src/context/AuthContext.js#L27)
+  - Redirect
+  - JWT
+  - Local storage vs cookie
+  - [Code splitting](https://github.com/chesterheng/react-security/blob/main/orbit-app/src/App.js#L55)
+  - [Authenticated route](https://github.com/chesterheng/react-security/blob/main/orbit-app/src/App.js#L23)
+  - Protect API
+    - [Local storage](https://github.com/chesterheng/react-security/commit/d8c2e1b344da446a2191902c4a787fb58f093e63#diff-bd1e345f02e87166528ccb0e7cc453f09cf45337ff86b2e891360ec684bb8340L19)
+- Authorization
+  - [Role](https://github.com/chesterheng/react-security/blob/main/orbit-app/src/components/Sidebar.js#L20)
+  - [Admin route](https://github.com/chesterheng/react-security/blob/main/orbit-app/src/App.js#L38)
+- Hardening
+  - [XSS attack](https://github.com/chesterheng/react-security/blob/main/orbit-app/src/pages/Users.js#L36)
+  - [CSRF attack](https://github.com/chesterheng/react-security/commit/d8c2e1b344da446a2191902c4a787fb58f093e63#diff-bd1e345f02e87166528ccb0e7cc453f09cf45337ff86b2e891360ec684bb8340R18)
+- [Questions](https://www.notion.so/chesterheng/React-Security-1132417ef22a49628a562c576b5ec5a8)

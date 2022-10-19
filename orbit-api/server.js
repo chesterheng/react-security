@@ -5,10 +5,15 @@ const cors = require('cors');
 const jwtDecode = require('jwt-decode');
 const mongoose = require('mongoose');
 const jwt = require('express-jwt');
-
+const cookieParser = require('cookie-parser');
 const dashboardData = require('./data/dashboard');
 const User = require('./data/User');
 const InventoryItem = require('./data/InventoryItem');
+
+const csrf = require('csurf');
+const csrfProtection = csrf({
+  cookie: true
+})
 
 const {
   createToken,
@@ -21,6 +26,7 @@ const app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(cookieParser());
 
 app.post('/api/authenticate', async (req, res) => {
   try {
@@ -49,6 +55,10 @@ app.post('/api/authenticate', async (req, res) => {
 
       const decodedToken = jwtDecode(token);
       const expiresAt = decodedToken.exp;
+
+      res.cookie('token', token, {
+        httpOnly: true,
+      });
 
       res.json({
         message: 'Authentication successful!',
@@ -117,6 +127,10 @@ app.post('/api/signup', async (req, res) => {
         role
       };
 
+      res.cookie('token', token, {
+        httpOnly: true,
+      });
+
       return res.json({
         message: 'User created!',
         token,
@@ -136,12 +150,12 @@ app.post('/api/signup', async (req, res) => {
 });
 
 const attachUser = (req, res, next) => {
-  const token = req.headers.authorization;
+  const token = req.cookies.token;
   if(!token) {
     return res.status(401).json({ message: 'Authentication invalid' });
   }
 
-  const decodedToken = jwtDecode(token.slice(7));
+  const decodedToken = jwtDecode(token);
   if(!decodedToken) {
     return res.status(401).json({ message: 'There was a problem authorizing the request' });
   } else {
@@ -155,8 +169,15 @@ const checkJwt = jwt({
   secret: process.env.JWT_SECRET,
   issuer: 'api.orbit',
   audience: 'api.orbit',
-  algorithms: ['HS256']
+  algorithms: ['HS256'],
+  getToken: req => req.cookies.token
 });
+
+app.use(csrfProtection);
+
+app.get('/api/csrf-token', (req, res) => {
+  res.json({ csrfToken: req.csrfToken() })
+})
 
 const requireAdmin = (req, res, next) => {
   const { role } = req.user;
@@ -216,7 +237,6 @@ app.post('/api/inventory',
       const input = Object.assign({}, req.body, {
         user: sub
       })
-      console.log(input);
       const inventoryItem = new InventoryItem(input);
       await inventoryItem.save();
       res.status(201).json({
